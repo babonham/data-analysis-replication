@@ -1,0 +1,18 @@
+---
+title: "data-analysis-replication"
+format: html
+editor: visual
+---
+
+Intro Description:
+Data Used:
+Analyses Conducted:
+Original Conclusions:
+
+```{r}
+
+```
+
+```{r}
+
+```

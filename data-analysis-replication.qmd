@@ -6,9 +6,28 @@ format: html
 editor: visual
 ---
 
-Introduction
+## Introduction
+This report replicates key analyses from Ramirez et al., “Carbon pathways and trophic attributes are conserved in carnivorous reef fishes across a major human disturbance gradient,” which investigates how human disturbance influences energy flow and food web structure in a hyperdiverse coral reef ecosystem at Kiritimati Island. The original study leverages advanced stable isotope techniques, including compound-specific amino acid analysis, to evaluate whether shifts in habitat quality and community composition translate into changes in trophic structure and carbon sourcing for reef fishes.
 
-Visualization of the Data
+The dataset is based on ecosystem-scale sampling across a well-defined gradient of human disturbance. It includes tissue samples from six carnivorous, generalist reef fish species that collectively represent a large proportion of reef fish biomass. For each sample, both bulk stable isotope values and essential amino acid isotope signatures were measured. These data are paired with isotopic signatures from multiple basal carbon sources, including plankton, detritus, coral-derived material, and epilithic algal matrices, enabling detailed comparison of energy pathways across sites with differing levels of disturbance.
+
+To evaluate trophic structure and energy sourcing, the original study applied a combination of statistical and isotope-based methods. These included bulk isotope analysis to estimate trophic position, compound-specific isotope analysis to resolve carbon sources, and Bayesian mixing models to quantify source contributions. Linear discriminant analysis (LDA) was used to differentiate isotopic fingerprints among sources, while general linear models (GLMs) tested for variation in trophic metrics across the disturbance gradient. Isotopic niche analyses further assessed changes in niche width and position among species.
+
+Despite pronounced differences in reef condition and community composition, the original study found that dominant energy pathways remained largely unchanged. Reef fishes consistently relied on planktonic production and microbially reworked detritus as primary energy sources, with minimal contributions from coral- and algae-based pathways. Trophic positions and niche characteristics were similarly stable across the disturbance gradient. These findings suggest that key energy channels in this system are relatively robust to human disturbance, potentially due to the stabilizing role of generalist consumers and persistent pelagic and detrital inputs.
+
+This replication focuses on reproducing several core components of the original analysis. First, I will calculate and compare summary statistics of relative biomass and abundance, expressed as percentages of the total, across the six fish species and three levels of human disturbance. Second, I will recreate visualizations of essential amino acid isotope values, specifically phenylalanine (Phe) and lysine (Lys), across disturbance levels and sites for each species. Third, I will replicate the inferential component of the study by conducting a linear discriminant analysis (LDA) to evaluate separation among carbon sources based on isotopic signatures. Finally, I will reproduce visualizations of the LDA results to assess how well isotopic fingerprints distinguish among sources and to compare patterns with those reported in the original study.
+
+
+## Visualization of the Data
+Note: Variables can be referenced in the data variable dictionary found at the bottom of the report
+
+ki_bulk_sia.csv is a comma-delimited file containing sample meta-data and bulk stable isotope data for sampled carnivorous reef fish.
+
+ki_csia_c.csv is a comma-delimited file containing sampled meta-data and amino acid-specific stable carbon isotope data for sampled carnivorous reef fish.
+
+ki_csia_n.csv is a comma-delimited file containing sampled meta-data and amino acid-specific stable nitrogen isotope data for sampled carnivorous reef fish.
+
+ki_fish_data_sum.csv is a comma-delimited file containing summary data for fish observed in underwater visual census surveys (from Magel et al. 2020).
 ```{r}
 #load all necessary packages
 library(ggplot2)
@@ -518,3 +537,80 @@ lda_plot
 knitr::include_graphics("images/Analysis4.jpeg")
 lda_plot 
 ```
+
+## References:
+Ramirez MD, McMahon KW, Rooney N, El-Sabaawi RW, Baum JK. 2026. Carbon pathways and trophic attributes are conserved in carnivorous reef fishes across a major human disturbance gradient. Journal of Animal Ecology 95: 39–53. 
+
+## Data Dictionary:
+Data set: ki_bulk_sia.csv
+Variables:
+  * id: alphanumeric unique identification code for an individual
+  * species: identification code for species 
+  * sci_name: scientific name
+  * group: fish trophic group (Pi = piscivore, GC = generalist carnivore)
+  * year: calendar year of sample collection
+  * site: identification code for sampling location
+  * dist_cat: local human disturbance level category (see manuscript for details)
+  * weight_.g.: fish weight in grams
+  * total_length_.mm.: total fish length in millimeters
+  * standard_length_.mm.: standard fish length in millimeters
+  * d13C (‰): bulk stable carbon isotope values; permil
+  * d15N (‰): bulk stable nitrogen isotope value; permil
+  * C.N: ratio of percent carbon to percent nitrogen in bulk SIA sample
+  
+Data set: ki_csia_c.csv
+Variables:
+  * fish_code: condensed alphanumeric unique identification code for an individual
+  * species_code: condensed identification code for species 
+  * id: alphanumeric unique identification code for an individual
+  * sci_name: scientific name
+  * group: fish trophic group (Pi = piscivore, GC = generalist carnivore, He = herbivore, De = detritivore, Co = corallivore, Zp = zooplanktivore)
+  * site: identification code for sampling location
+  * dist_cat: local human disturbance level category (see manuscript for details)
+  * isotope: stable isotope measured
+  * n_inj: number of sample injections on GC-C-IRMS per sample
+  * Columns 10 through 37: amino acid-specific stable carbon isotope values for sampled fish. Three letter codes denote each amino acid: Ala = alanine, Gly = glycine, Thr = threonine, Ser = serine, Val = valine, Leu = leucine, Ile = isoleucine, Pro = proline, Asp = aspartic acid, Glu = glutamic acid, Phe = phenylalanine, Lys = lysine. Values are means of triplicate injections. Columns with the suffix "SD" denote the standard deviation of the triplicate injections for each isotope and amino acid.
+
+Data set: ki_csia_n.csv
+Variables:
+ * fish_code: condensed alphanumeric unique identification code for an individual
+  * species_code: condensed identification code for species 
+  * id: alphanumeric unique identification code for an individual
+  * sci_name: scientific name
+  * group: fish trophic group (Pi = piscivore, GC = generalist carnivore, He = herbivore, De = detritivore, Co =     corallivore, Zp = zooplanktivore)
+  * site: identification code for sampling location
+  * dist_cat: local human disturbance level category (see manuscript for details)
+  * pub.name: alternative site name
+  * continous.pressure.2km: quantitative human pressure value (see manuscript for details)
+  * wgt_g: fish weight in grams
+  * tot_len_mm: total fish length in millimeters
+  * std_len_mm: standard fish length in millimeters
+  * isotope: stable isotope measured
+  * n_inj: number of sample injections on GC-C-IRMS per sample
+  * sumV = microbial resynthesis 
+  * Columns 15 through 46: amino acid-specific stable nitrogen isotope values for sampled fish. Three letter codes denote each amino acid: Ala = alanine, Gly = glycine, Thr = threonine, Ser = serine, Val = valine, Leu = leucine, Ile = isoleucine, Pro = proline, Asp = aspartic acid, Glu = glutamic acid, Phe = phenylalanine, Lys = lysine. Values are means of triplicate injections. Columns with the suffix "SD" denote the standard deviation of the triplicate injections for each isotope and amino acid.
+
+Data set: ki_fish_data_sum.csv
+Variables:
+* year: calendar year of sample collection
+  * date: date in day_month_year format
+  * site: identification code for sampling location
+  * observer: initials of the observer who conducted the survey
+  * dist_cat: local human disturbance level category (see manuscript for details)
+  * Columns 6 through 23: biomass (BM) and abundance (AB) estimates for all fish (total) and by trophic group (corallivores = 'coral', detritivores = 'det', generalist carnivores = 'gen', herbivores = 'herb', invertivores = 'inv', omnivores = 'omn', piscivores = 'pisc', planktivores = 'plank')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

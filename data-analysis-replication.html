@@ -2743,7 +2743,7 @@ $ Sr_avg                 &lt;dbl&gt; 4.196229, 3.769378, 5.873063, 3.280618, 5.9
 </div>
 </div>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>csia_n_plots <span class="ot">&lt;-</span> (Phe <span class="sc">+</span> Lys)<span class="sc">/</span> (Phe2 <span class="sc">+</span>Lys2)  </span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>csia_n_plots</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>csia_n_plots <span class="co">#needs to be viewed in full screen to account for scale</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
 (`geom_segment()`).</code></pre>
@@ -2905,7 +2905,7 @@ Proportion of trace:
 </div>
 </div>
 </div>
-<p>Analysis 4:</p>
+<p>Analysis 4: Data Visualization Plot Replication</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Create data sets with these LDA coordinates</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>datPred <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">fish_code =</span> fish.source<span class="sc">$</span>fish_code, <span class="at">group=</span>fish.source<span class="sc">$</span>group, <span class="at">sci_name =</span> fish.source<span class="sc">$</span>sci_name, <span class="at">dist_cat =</span> fish.source<span class="sc">$</span>dist_cat, <span class="fu">predict</span>(fish.train)<span class="sc">$</span>x) </span>

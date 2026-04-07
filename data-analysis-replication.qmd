@@ -395,7 +395,7 @@ Lys2 <- ggplot(
 Lys2
 
 csia_n_plots <- (Phe + Lys)/ (Phe2 +Lys2)  
-csia_n_plots
+csia_n_plots #needs to be viewed in full screen to account for scale
 
 #Comparison of plots
 #| out-width: "##%"
@@ -440,7 +440,7 @@ Analysis 4: Data Visualization Original Plot
 knitr::include_graphics("images/Analysis4.jpeg")
 ```
 
-Analysis 4:
+Analysis 4: Data Visualization Plot Replication
 ```{r}
 
 #Create data sets with these LDA coordinates

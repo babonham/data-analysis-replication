@@ -8,18 +8,19 @@ editor: visual
 
 Introduction
 
-
-
-
 Visualization of the Data
 ```{r}
 #load all necessary packages
-library(tidyverse)
 library(ggplot2)
-library(dplyr)
 library(skimr)
 library(tidyr)
 library(grid)
+library(patchwork)
+library(reshape2)
+library(MASS)
+library(ellipse)
+library(dplyr)
+library(tidyverse)
 
 #Load all data
 bulk_sia<- read.csv("data/ki_bulk_sia.csv")
@@ -39,7 +40,7 @@ head(fish_data) #preview raw data
 skim(fish_data) #summary statistics
 ```
 
-Analysis 1: Summary Statistic Original
+Analysis 1: Summary Statistic Original Plot
 ```{r}
 #original figure 
 #| out-width: "##%"
@@ -53,11 +54,9 @@ glimpse(fish_data)
 
 #Wrangling data for abundance summary statistics
 fish_ab <- fish_data %>%
-  group_by(dist_cat) %>%
-  #Calculate means
+ group_by(dist_cat) %>% 
   summarise(
     total = mean(AB_total, na.rm = TRUE),
-
     Pi = mean(AB_pisc, na.rm = TRUE),
     GC = mean(AB_gen, na.rm = TRUE),
     De = mean(AB_det, na.rm = TRUE),
@@ -65,20 +64,17 @@ fish_ab <- fish_data %>%
     Pl = mean(AB_plank, na.rm = TRUE),
     Co = mean(AB_coral, na.rm = TRUE),
     Om = mean(AB_omn, na.rm = TRUE),
-    He = mean(AB_herb, na.rm = TRUE)
-  ) %>%
-  #Reorganizing data for easier plotting
+    He = mean(AB_herb, na.rm = TRUE)) %>%
   pivot_longer(
     cols = c(Pi, GC, De, In, Pl, Co, Om, He),
     names_to = "trophic_group",
     values_to = "AB"
   ) %>%
-  #Calculate percent of total biomass
   mutate(
     rel_AB = (AB / total) * 100
   )
 
-##Reordering disturbance categories to match original plot
+#Reordering disturbance categories to match original plot
 fish_ab <- fish_ab %>%
   mutate(dist_cat = factor(dist_cat, levels = c("Very Low", "Medium", "Very High")))
 
@@ -109,7 +105,6 @@ fish_bm <- fish_data %>%
   #Calculate means
   summarise(
     total = mean(BM_total, na.rm = TRUE),
-
     Pi = mean(BM_pisc, na.rm = TRUE),
     GC = mean(BM_gen, na.rm = TRUE),
     De = mean(BM_det, na.rm = TRUE),
@@ -165,7 +160,15 @@ knitr::include_graphics("images/Analysis1.png")
 fish_sum_plots
 ```
 
-Analysis 2:
+Analysis 2: Data Visualization Original Plot
+```{r}
+#original figure 
+#| out-width: "##%"
+knitr::include_graphics("images/Analysis2.png")
+
+```
+
+Analysis 2: Data Visualization Replication
 ```{r}
 #look at my data
 glimpse(csia_n)
@@ -273,12 +276,11 @@ Phe2 <- ggplot(
   # Mean 
   stat_summary(
     aes(group = pub.name),
-    fun.data = data_summary,
-    color = "black",
-    pch = 16,
-    size = 0.25,
-    position = position_dodge(0.75)
-  ) +
+    fun.data = function(x) {
+      dplyr::tibble(
+        y = mean(x, na.rm = TRUE),
+        ymin = mean(x, na.rm = TRUE) - sd(x, na.rm = TRUE),
+        ymax = mean(x, na.rm = TRUE) + sd(x, na.rm = TRUE))}) +
   # Sample size 
   stat_summary(
     aes(group = pub.name),
@@ -315,7 +317,7 @@ Phe2 <- ggplot(
     fill  = "Site") +
 
   # Theme
-  theme_test() +
+  theme_minimal() +
   theme(
     text = element_text(size = 12),
     axis.text = element_text(colour = "black"),
@@ -341,12 +343,11 @@ Lys2 <- ggplot(
   # Mean 
   stat_summary(
     aes(group = pub.name),
-    fun.data = data_summary,
-    color = "black",
-    pch = 16,
-    size = 0.25,
-    position = position_dodge(0.75)
-  ) +
+    fun.data = function(x) {
+      dplyr::tibble(
+        y = mean(x, na.rm = TRUE),
+        ymin = mean(x, na.rm = TRUE) - sd(x, na.rm = TRUE),
+        ymax = mean(x, na.rm = TRUE) + sd(x, na.rm = TRUE))}) +
   # Sample size 
   stat_summary(
     aes(group = pub.name),
@@ -383,7 +384,7 @@ Lys2 <- ggplot(
     fill  = "Site") +
 
   # Theme
-  theme_test() +
+  theme_minimal() +
   theme(
     text = element_text(size = 12),
     axis.text = element_text(colour = "black"),
@@ -394,286 +395,126 @@ Lys2 <- ggplot(
 Lys2
 
 csia_n_plots <- (Phe + Lys)/ (Phe2 +Lys2)  
+csia_n_plots
 
+#Comparison of plots
+#| out-width: "##%"
+knitr::include_graphics("images/Analysis2.png")
+csia_n_plots
 ```
 
 Analysis 3: Inferential Statistical Analysis Replication
 ```{r}
-# Aphareus furca
-mod1.2 <- lm(TP_cor ~ cp.z, data = data.AF)
-mod1.3 <- lm(TP_cor ~ dist_cat, data = data.AF)
+glimpse(csia_c)
 
-summary(mod1.2)
-summary(mod1.3)
+#Subset data
+fish.source <- csia_c[!(csia_c$group %in% c("Pi", "GC")), ]
+fish.animal <- csia_c[csia_c$group %in% c("Pi", "GC"), ]
 
-AIC(mod1.2)
-AIC(mod1.3)
+#Fit LDA with cross-validation (model + accuracy)
+fish.lda <- lda(group ~ Ile + Leu + Lys + Phe + Thr + Val,
+                data = fish.source,
+                CV = TRUE)
 
-anova(mod1.2,mod1.3,test = "F") # Results not significantly different
+#Evaluate classification accuracy
+ct.prod <- table(fish.source$group, fish.lda$class)
+overall_accuracy <- sum(diag(prop.table(ct.prod)))
+group_accuracy <- diag(prop.table(ct.prod, 1))
 
-myAIC <- round(AIC(mod1.2,mod1.3),2)
-myAIC$dAIC <- myAIC$AIC - min(myAIC$AIC)
-#myAIC$weights <- round(Weights(myAIC$AIC),2)
-#myAIC[order(-myAIC$weights),]
-myAIC[order(myAIC$dAIC),]
+#Train final model
+fish.train <- lda(group ~ Ile + Leu + Lys + Phe + Thr + Val,
+                  data = fish.source)
 
-# Compute the analysis of variance
-AF.aov <- aov(TP_cor ~ dist_cat, data = data.AF)
-# Summary of the analysis
-summary(AF.aov)
-# multiple pairwise-comparison between the means of groups
-TukeyHSD(AF.aov)
+#Predict carbon sources for carnivorous fish
+animal.res <- predict(fish.train, fish.animal)
 
-# Test for Homogeneity of Variance
-leveneTest(TP_cor ~ dist_cat, data = data.AF) #p > 0.05...no evidence to suggest that the variance across groups is statistically significantly differen
+# coefficients (which amino acids matter)
+fish.train 
 
-plot(AF.aov, 1)
-
-# Test for Normality
-# Extract the residuals
-AF.aov_residuals <- residuals(object = AF.aov )
-# Run Shapiro-Wilk test
-shapiro.test(x = AF.aov_residuals ) # p > 0.05...no indication that normality is violated.
-
-plot(AF.aov, 2)
-
-
-
-# Caranx melampygus
-mod2.2 <- lm(TP_cor ~ cp.z, data = data.CM)
-mod2.3 <- lm(TP_cor ~ dist_cat, data = data.CM)
-
-summary(mod2.2)
-summary(mod2.3)
-
-AIC(mod2.2)
-AIC(mod2.3)
-
-anova(mod2.2,mod2.3,test = "F") # Results not significantly different
-
-myAIC <- round(AIC(mod2.2,mod2.3),2)
-myAIC$dAIC <- myAIC$AIC - min(myAIC$AIC)
-#myAIC$weights <- round(Weights(myAIC$AIC),2)
-#myAIC[order(-myAIC$weights),]
-myAIC[order(myAIC$dAIC),]
-
-# Compute the analysis of variance
-CM.aov <- aov(TP_cor ~ dist_cat, data = data.CM)
-# Summary of the analysis
-summary(CM.aov)
-# multiple pairwise-comparison between the means of groups
-TukeyHSD(CM.aov)
-
-# Test for Homogeneity of Variance
-leveneTest(TP_cor ~ dist_cat, data = data.CM) #p > 0.05...no evidence to suggest that the variance across groups is statistically significantly differen
-
-plot(CM.aov, 1)
-
-# Test for Normality
-# Extract the residuals
-CM.aov_residuals <- residuals(object = CM.aov )
-# Run Shapiro-Wilk test
-shapiro.test(x = CM.aov_residuals ) # p > 0.05...no indication that normality is violated.
-
-plot(CM.aov, 2)
-
-
-
-
-# Cephalopholis argus
-mod3.2 <- lm(TP_cor ~ cp.z, data = data.CA)
-mod3.3 <- lm(TP_cor ~ dist_cat, data = data.CA)
-
-summary(mod3.2)
-summary(mod3.3)
-
-AIC(mod3.2)
-AIC(mod3.3)
-
-anova(mod3.2,mod3.3,test = "F") # Results not significantly different
-
-myAIC <- round(AIC(mod3.2,mod3.3),2)
-myAIC$dAIC <- myAIC$AIC - min(myAIC$AIC)
-#myAIC$weights <- round(Weights(myAIC$AIC),2)
-#myAIC[order(-myAIC$weights),]
-myAIC[order(myAIC$dAIC),]
-
-# Compute the analysis of variance
-CA.aov <- aov(TP_cor ~ dist_cat, data = data.CA)
-# Summary of the analysis
-summary(CA.aov)
-# multiple pairwise-comparison between the means of groups
-TukeyHSD(CA.aov)
-
-# Test for Homogeneity of Variance
-leveneTest(TP_cor ~ dist_cat, data = data.CA) #p > 0.05...no evidence to suggest that the variance across groups is statistically significantly differen
-
-plot(CA.aov, 1)
-
-# Test for Normality
-# Extract the residuals
-CA.aov_residuals <- residuals(object = CA.aov )
-# Run Shapiro-Wilk test
-shapiro.test(x = CA.aov_residuals ) # p > 0.05...no indication that normality is violated.
-
-plot(CA.aov, 2)
-
-
-
-# Lutjanus bohar
-mod4.2 <- lm(TP_cor ~ cp.z, data = data.LB)
-mod4.3 <- lm(TP_cor ~ dist_cat, data = data.LB)
-
-summary(mod4.2)
-summary(mod4.3)
-
-AIC(mod4.2)
-AIC(mod4.3)
-
-anova(mod4.2,mod4.3,test = "F") # Results not significantly different
-
-myAIC <- round(AIC(mod4.2,mod4.3),2)
-myAIC$dAIC <- myAIC$AIC - min(myAIC$AIC)
-#myAIC$weights <- round(Weights(myAIC$AIC),2)
-#myAIC[order(-myAIC$weights),]
-myAIC[order(myAIC$dAIC),]
-
-# Compute the analysis of variance
-#data.LB <- subset(data.LB, fish_code != "LB8") # must drop fish LB8 of normality assumption to be upheld
-LB.aov <- aov(TP_cor ~ dist_cat, data = data.LB)
-# Summary of the analysis
-summary(LB.aov)
-# multiple pairwise-comparison between the means of groups
-TukeyHSD(LB.aov)
-
-# Test for Homogeneity of Variance
-leveneTest(TP_cor ~ dist_cat, data = data.LB) #p > 0.05...no evidence to suggest that the variance across groups is statistically significantly differen
-
-plot(LB.aov, 1)
-
-# Test for Normality
-# Extract the residuals
-LB.aov_residuals <- residuals(object = LB.aov )
-# Run Shapiro-Wilk test
-shapiro.test(x = LB.aov_residuals ) # p > 0.05...no indication that normality is violated.
-
-plot(LB.aov, 2)
-
-
-
-# Cephalopholis urodeta
-mod5.2 <- lm(TP_cor ~ cp.z, data = data.CU)
-mod5.3 <- lm(TP_cor ~ dist_cat, data = data.CU)
-
-summary(mod5.2)
-summary(mod5.3)
-
-AIC(mod5.2)
-AIC(mod5.3)
-
-anova(mod5.2,mod5.3,test = "F") # Model with categorical variable has lower AIC than model with continuous variable
-
-myAIC <- round(AIC(mod5.2,mod5.3),2)
-myAIC$dAIC <- myAIC$AIC - min(myAIC$AIC)
-#myAIC$weights <- round(Weights(myAIC$AIC),2)
-#myAIC[order(-myAIC$weights),]
-myAIC[order(myAIC$dAIC),]
-
-# Compute the analysis of variance
-CU.aov <- aov(TP_cor ~ dist_cat, data = data.CU)
-# Summary of the analysis
-summary(CU.aov)
-# multiple pairwise-comparison between the means of groups
-TukeyHSD(CU.aov)
-
-# Test for Homogeneity of Variance
-leveneTest(TP_cor ~ dist_cat, data = data.CU) #p > 0.05...no evidence to suggest that the variance across groups is statistically significantly differen
-
-plot(CU.aov, 1)
-
-# Test for Normality
-# Extract the residuals
-CU.aov_residuals <- residuals(object = CU.aov )
-# Run Shapiro-Wilk test
-shapiro.test(x = CU.aov_residuals ) # p > 0.05...no indication that normality is violated.
-
-plot(CU.aov, 2)
-
-
-
-# Lutjanus fulvus
-mod6.2 <- lm(TP_cor ~ cp.z, data = data.LF)
-mod6.3 <- lm(TP_cor ~ dist_cat, data = data.LF)
-
-summary(mod6.2)
-summary(mod6.3)
-
-AIC(mod6.2)
-AIC(mod6.3)
-
-anova(mod6.2,mod6.3,test = "F") # Results not significantly different
-
-myAIC <- round(AIC(mod6.2,mod6.3),2)
-myAIC$dAIC <- myAIC$AIC - min(myAIC$AIC)
-#myAIC$weights <- round(Weights(myAIC$AIC),2)
-#myAIC[order(-myAIC$weights),]
-myAIC[order(myAIC$dAIC),]
-
-# Compute the analysis of variance
-LF.aov <- aov(TP_cor ~ dist_cat, data = data.LF)
-# Summary of the analysis
-summary(LF.aov)
-# multiple pairwise-comparison between the means of groups
-TukeyHSD(LF.aov)
-
-# Test for Homogeneity of Variance
-leveneTest(TP_cor ~ dist_cat, data = data.LF) #p > 0.05...no evidence to suggest that the variance across groups is statistically significantly differen
-
-plot(LF.aov, 1)
-
-# Test for Normality
-# Extract the residuals
-LF.aov_residuals <- residuals(object = LF.aov )
-# Run Shapiro-Wilk test
-shapiro.test(x = LF.aov_residuals ) # p > 0.05...no indication that normality is violated.
-
-plot(LF.aov, 2)
-
-
+#Comparison: no plots, however LD1 and LD2 values match what is reported in the paper
 ```
-
+Analysis 4: Data Visualization Original Plot
+```{r}
+#original figure 
+#| out-width: "##%"
+knitr::include_graphics("images/Analysis4.jpeg")
+```
 
 Analysis 4:
 ```{r}
-ggplot(TPcsia.cor, aes(sci_name, TP_cor, fill = dist_cat, shape =dist_cat)) + 
-  geom_errorbar(stat="summary", 
-                fun.min=function(x) {mean(x)-1.96* sd(x)/sqrt(length(x))}, 
-                fun.max=function(x) {mean(x)+1.96*sd(x)/sqrt(length(x))},
-                position = position_dodge(0.75), width = 0, lwd=1) + 
-  stat_summary(fun.data = function(x){return(data.frame(y = 4.45, label = length(x)))}, 
-               geom = "text", aes(group=dist_cat),
-               position = position_dodge(0.75), 
-               col = "black") +
-  geom_point(stat="summary", fun="mean", position = position_dodge(0.75), pch = 21, col = "black", size=5, alpha = 0.75) + 
-  scale_fill_manual(values = c("#2A0BD9", "#ABF8FF", "#A60021"))+
-  scale_y_continuous(limits=c(3.2,4.5),breaks = seq(3.2,4.4,0.4)) +
-  theme_classic()+theme(text = element_text(size=14))+
-  #theme(axis.line = element_line(colour = 'black', size = .5))+
-  theme(axis.text.x = element_text(colour="black"), axis.text.y = element_text(colour="black")) +
-  theme_test() +
-  theme(axis.text = element_text(colour="black")) +
-  theme(text=element_text(size=12)) +
-  scale_x_discrete(labels = c("A. furca", "C. melampygus", "C. argus", "L. bohar", "C. urodeta", "L. fulvus")) +
-  xlab("Species") + 
-  ylab(expression(paste(TP[CSIA]))) +
-  theme(legend.position = 'top') + 
-  theme(text=element_text(size=12)) +
-  theme(axis.ticks.length=unit(2.5,"mm")) +
-  theme(panel.border = element_rect(color = "black")) +
-  guides(fill = guide_legend(title = "Disturbance Level", title.position = "top", title.hjust = 0.5)) +
-  geom_vline(xintercept=c(1.5, 2.5, 3.5, 4.5, 5.5), lty="dotted")
 
+#Create data sets with these LDA coordinates
+datPred <- data.frame(fish_code = fish.source$fish_code, group=fish.source$group, sci_name = fish.source$sci_name, dist_cat = fish.source$dist_cat, predict(fish.train)$x) 
 
+#Predict the carnivorous fish fractions based on ESS
+animal.res <- predict(fish.train, fish.animal)
+class <- cbind(animal.res$class, animal.res$posterior, animal.res$x)
+
+#Save the predicted coordinates 
+datPred2 <- data.frame(fish_code = fish.animal$fish_code, dist_cat = fish.animal$dist_cat, sci_name = fish.animal$sci_name, group='Pi',
+                       animal.res$x)
+
+#Merge the source and animal dataframes for plotting
+datPred3 <- rbind(datPred , datPred2)
+colnames(datPred3)[1] <- "fish_code"
+
+dat_ell <- data.frame() 
+
+datPred$group <- as.factor(datPred$group)
+datPred$group <- factor(datPred$group, level = c("Co", "De", "He", "Zp"))
+
+for(g in levels(datPred$group)){ 
+  dat_ell <- rbind(dat_ell, cbind(as.data.frame(with(datPred[datPred$group==g,], 
+                                                     ellipse(cor(LD1, LD2), 
+                                                             scale=c(sd(LD1), sd(LD2)), 
+                                                             centre=c(mean(LD1), mean(LD2))))), group=g)) } 
+
+#levels(datPred3$sci_name)
+datPred3$sci_name <- factor(datPred3$sci_name, level = c("Chaetodon ornatissimus","Ctenochaetus marginatus","Acanthurus nigricans","Pseudanthias olivaceus",
+                                                 "Aphareus furca", "Caranx melampygus","Cephalopholis argus",  "Lutjanus bohar", "Cephalopholis urodeta", "Lutjanus fulvus"))
+
+#flip so axes match the original plot
+datPred3$LD2 <- -datPred3$LD2
+dat_ell$y <- -dat_ell$y
+
+#Create subsets
+fish_points <- datPred3[datPred3$group %in% c("Pi", "GC"), ]        # carnivorous fish
+source_points <- datPred3[!(datPred3$group %in% c("Pi", "GC")), ]   # carbon sources
+ellipses <- dat_ell[!(dat_ell$group %in% c("Pi", "GC")), ]          # ellipses for sources 
+
+#Create plot
+lda_plot<- ggplot(datPred3, aes(x = LD1, y = LD2, shape = group)) +
+  #carbon source ellipses
+  geom_path(data = ellipses,
+            aes(x = x, y = y),
+            linetype = 2,
+            size = 0.75) +
+  #carbon source points
+  geom_point(data = source_points,
+             size = 4) +
+  # fish points 
+  geom_point(data = fish_points,
+             aes(color = sci_name),
+             size = 5,
+             alpha = 0.85) +
+  scale_shape_manual(values = c(0, 2, 5, 19, 6)) +
+  scale_color_manual(values = c("#6699CC", "#7D70BA", "#CFFFB0",
+                                "#F3D34A", "#FF8C42", "#A23E48")) +
+  labs(x = expression(LD[1]~"(83.47%)"),
+       y = expression(LD[2]~"(13.92%)"),
+       color = "Species",
+       shape = "Carbon Source") +
+  theme_minimal() +
+  theme(
+    axis.text = element_text(color = "black"),
+    text = element_text(size = 14),
+    axis.ticks.length = unit(2.5, "mm"),
+    legend.position = "top",
+    plot.title.position = "plot") 
+lda_plot
+
+#Compare plots
+#| out-width: "##%"
+knitr::include_graphics("images/Analysis4.jpeg")
+lda_plot 
 ```
-
-

@@ -567,6 +567,7 @@ Ramirez MD, McMahon KW, Rooney N, El-Sabaawi RW, Baum JK. 2026. Carbon pathways 
 ## Data Dictionary:
 Data set: ki_bulk_sia.csv
 Variables:
+
   * id: alphanumeric unique identification code for an individual
   * species: identification code for species 
   * sci_name: scientific name
@@ -583,6 +584,7 @@ Variables:
   
 Data set: ki_csia_c.csv
 Variables:
+
   * fish_code: condensed alphanumeric unique identification code for an individual
   * species_code: condensed identification code for species 
   * id: alphanumeric unique identification code for an individual
@@ -596,6 +598,7 @@ Variables:
 
 Data set: ki_csia_n.csv
 Variables:
+
  * fish_code: condensed alphanumeric unique identification code for an individual
   * species_code: condensed identification code for species 
   * id: alphanumeric unique identification code for an individual
@@ -615,6 +618,7 @@ Variables:
 
 Data set: ki_fish_data_sum.csv
 Variables:
+
 * year: calendar year of sample collection
   * date: date in day_month_year format
   * site: identification code for sampling location

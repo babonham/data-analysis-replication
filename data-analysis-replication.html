@@ -3056,10 +3056,65 @@ Proportion of trace:
 </section>
 <section id="data-dictionary" class="level2">
 <h2 class="anchored" data-anchor-id="data-dictionary">Data Dictionary:</h2>
-<p>Data set: ki_bulk_sia.csv Variables: * id: alphanumeric unique identification code for an individual * species: identification code for species * sci_name: scientific name * group: fish trophic group (Pi = piscivore, GC = generalist carnivore) * year: calendar year of sample collection * site: identification code for sampling location * dist_cat: local human disturbance level category (see manuscript for details) * weight_.g.: fish weight in grams * total_length_.mm.: total fish length in millimeters * standard_length_.mm.: standard fish length in millimeters * d13C (‰): bulk stable carbon isotope values; permil * d15N (‰): bulk stable nitrogen isotope value; permil * C.N: ratio of percent carbon to percent nitrogen in bulk SIA sample</p>
-<p>Data set: ki_csia_c.csv Variables: * fish_code: condensed alphanumeric unique identification code for an individual * species_code: condensed identification code for species * id: alphanumeric unique identification code for an individual * sci_name: scientific name * group: fish trophic group (Pi = piscivore, GC = generalist carnivore, He = herbivore, De = detritivore, Co = corallivore, Zp = zooplanktivore) * site: identification code for sampling location * dist_cat: local human disturbance level category (see manuscript for details) * isotope: stable isotope measured * n_inj: number of sample injections on GC-C-IRMS per sample * Columns 10 through 37: amino acid-specific stable carbon isotope values for sampled fish. Three letter codes denote each amino acid: Ala = alanine, Gly = glycine, Thr = threonine, Ser = serine, Val = valine, Leu = leucine, Ile = isoleucine, Pro = proline, Asp = aspartic acid, Glu = glutamic acid, Phe = phenylalanine, Lys = lysine. Values are means of triplicate injections. Columns with the suffix “SD” denote the standard deviation of the triplicate injections for each isotope and amino acid.</p>
-<p>Data set: ki_csia_n.csv Variables: * fish_code: condensed alphanumeric unique identification code for an individual * species_code: condensed identification code for species * id: alphanumeric unique identification code for an individual * sci_name: scientific name * group: fish trophic group (Pi = piscivore, GC = generalist carnivore, He = herbivore, De = detritivore, Co = corallivore, Zp = zooplanktivore) * site: identification code for sampling location * dist_cat: local human disturbance level category (see manuscript for details) * pub.name: alternative site name * continous.pressure.2km: quantitative human pressure value (see manuscript for details) * wgt_g: fish weight in grams * tot_len_mm: total fish length in millimeters * std_len_mm: standard fish length in millimeters * isotope: stable isotope measured * n_inj: number of sample injections on GC-C-IRMS per sample * sumV = microbial resynthesis * Columns 15 through 46: amino acid-specific stable nitrogen isotope values for sampled fish. Three letter codes denote each amino acid: Ala = alanine, Gly = glycine, Thr = threonine, Ser = serine, Val = valine, Leu = leucine, Ile = isoleucine, Pro = proline, Asp = aspartic acid, Glu = glutamic acid, Phe = phenylalanine, Lys = lysine. Values are means of triplicate injections. Columns with the suffix “SD” denote the standard deviation of the triplicate injections for each isotope and amino acid.</p>
-<p>Data set: ki_fish_data_sum.csv Variables: * year: calendar year of sample collection * date: date in day_month_year format * site: identification code for sampling location * observer: initials of the observer who conducted the survey * dist_cat: local human disturbance level category (see manuscript for details) * Columns 6 through 23: biomass (BM) and abundance (AB) estimates for all fish (total) and by trophic group (corallivores = ‘coral’, detritivores = ‘det’, generalist carnivores = ‘gen’, herbivores = ‘herb’, invertivores = ‘inv’, omnivores = ‘omn’, piscivores = ‘pisc’, planktivores = ‘plank’)</p>
+<p>Data set: ki_bulk_sia.csv Variables:</p>
+<ul>
+<li>id: alphanumeric unique identification code for an individual</li>
+<li>species: identification code for species</li>
+<li>sci_name: scientific name</li>
+<li>group: fish trophic group (Pi = piscivore, GC = generalist carnivore)</li>
+<li>year: calendar year of sample collection</li>
+<li>site: identification code for sampling location</li>
+<li>dist_cat: local human disturbance level category (see manuscript for details)</li>
+<li>weight_.g.: fish weight in grams</li>
+<li>total_length_.mm.: total fish length in millimeters</li>
+<li>standard_length_.mm.: standard fish length in millimeters</li>
+<li>d13C (‰): bulk stable carbon isotope values; permil</li>
+<li>d15N (‰): bulk stable nitrogen isotope value; permil</li>
+<li>C.N: ratio of percent carbon to percent nitrogen in bulk SIA sample</li>
+</ul>
+<p>Data set: ki_csia_c.csv Variables:</p>
+<ul>
+<li>fish_code: condensed alphanumeric unique identification code for an individual</li>
+<li>species_code: condensed identification code for species</li>
+<li>id: alphanumeric unique identification code for an individual</li>
+<li>sci_name: scientific name</li>
+<li>group: fish trophic group (Pi = piscivore, GC = generalist carnivore, He = herbivore, De = detritivore, Co = corallivore, Zp = zooplanktivore)</li>
+<li>site: identification code for sampling location</li>
+<li>dist_cat: local human disturbance level category (see manuscript for details)</li>
+<li>isotope: stable isotope measured</li>
+<li>n_inj: number of sample injections on GC-C-IRMS per sample</li>
+<li>Columns 10 through 37: amino acid-specific stable carbon isotope values for sampled fish. Three letter codes denote each amino acid: Ala = alanine, Gly = glycine, Thr = threonine, Ser = serine, Val = valine, Leu = leucine, Ile = isoleucine, Pro = proline, Asp = aspartic acid, Glu = glutamic acid, Phe = phenylalanine, Lys = lysine. Values are means of triplicate injections. Columns with the suffix “SD” denote the standard deviation of the triplicate injections for each isotope and amino acid.</li>
+</ul>
+<p>Data set: ki_csia_n.csv Variables:</p>
+<ul>
+<li>fish_code: condensed alphanumeric unique identification code for an individual</li>
+<li>species_code: condensed identification code for species</li>
+<li>id: alphanumeric unique identification code for an individual</li>
+<li>sci_name: scientific name</li>
+<li>group: fish trophic group (Pi = piscivore, GC = generalist carnivore, He = herbivore, De = detritivore, Co = corallivore, Zp = zooplanktivore)</li>
+<li>site: identification code for sampling location</li>
+<li>dist_cat: local human disturbance level category (see manuscript for details)</li>
+<li>pub.name: alternative site name</li>
+<li>continous.pressure.2km: quantitative human pressure value (see manuscript for details)</li>
+<li>wgt_g: fish weight in grams</li>
+<li>tot_len_mm: total fish length in millimeters</li>
+<li>std_len_mm: standard fish length in millimeters</li>
+<li>isotope: stable isotope measured</li>
+<li>n_inj: number of sample injections on GC-C-IRMS per sample</li>
+<li>sumV = microbial resynthesis</li>
+<li>Columns 15 through 46: amino acid-specific stable nitrogen isotope values for sampled fish. Three letter codes denote each amino acid: Ala = alanine, Gly = glycine, Thr = threonine, Ser = serine, Val = valine, Leu = leucine, Ile = isoleucine, Pro = proline, Asp = aspartic acid, Glu = glutamic acid, Phe = phenylalanine, Lys = lysine. Values are means of triplicate injections. Columns with the suffix “SD” denote the standard deviation of the triplicate injections for each isotope and amino acid.</li>
+</ul>
+<p>Data set: ki_fish_data_sum.csv Variables:</p>
+<ul>
+<li>year: calendar year of sample collection
+<ul>
+<li>date: date in day_month_year format</li>
+<li>site: identification code for sampling location</li>
+<li>observer: initials of the observer who conducted the survey</li>
+<li>dist_cat: local human disturbance level category (see manuscript for details)</li>
+<li>Columns 6 through 23: biomass (BM) and abundance (AB) estimates for all fish (total) and by trophic group (corallivores = ‘coral’, detritivores = ‘det’, generalist carnivores = ‘gen’, herbivores = ‘herb’, invertivores = ‘inv’, omnivores = ‘omn’, piscivores = ‘pisc’, planktivores = ‘plank’)</li>
+</ul></li>
+</ul>
 </section>
 
 </main>

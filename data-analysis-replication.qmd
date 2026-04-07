@@ -59,14 +59,17 @@ head(fish_data) #preview raw data
 skim(fish_data) #summary statistics
 ```
 
-Analysis 1: Summary Statistic Original Plot
+## Analysis 1: Summary Statistic Original Plot
 ```{r}
 #original figure 
 #| out-width: "##%"
 knitr::include_graphics("images/Analysis1.png")
 ```
 
-Analysis 1: Summary Statistic Replication
+## Analysis 1: Summary Statistic Replication
+This analysis summarizes and visualizes how fish community structure varies across levels of human disturbance by examining both abundance and biomass across trophic groups. The workflow begins by grouping the dataset by disturbance category and calculating mean total abundance and biomass, along with mean values for each trophic group. These values are then reshaped into long format to facilitate plotting, and converted into relative percentages of the total (i.e., percent contribution of each trophic group to overall abundance or biomass). Factor levels for both disturbance categories and trophic groups are explicitly ordered to match the original study’s presentation.
+
+The processed data are visualized using bar plots that display the percent contribution of each trophic group across disturbance levels, with separate panels (facets) for each category. This approach is applied consistently to both abundance and biomass, allowing for direct comparison between the two metrics. Finally, the abundance and biomass plots are combined into a single figure, replicating the structure of the original analysis and enabling an integrated view of how trophic composition appears across the disturbance gradient.
 ```{r}
 #look at my variables
 glimpse(fish_data) 
@@ -179,7 +182,7 @@ knitr::include_graphics("images/Analysis1.png")
 fish_sum_plots
 ```
 
-Analysis 2: Data Visualization Original Plot
+## Analysis 2: Data Visualization Original Plot
 ```{r}
 #original figure 
 #| out-width: "##%"
@@ -187,7 +190,10 @@ knitr::include_graphics("images/Analysis2.png")
 
 ```
 
-Analysis 2: Data Visualization Replication
+## Analysis 2: Data Visualization Replication
+This analysis focuses on visualizing variation in essential amino acid isotope values (δ¹⁵N) across fish species, disturbance levels, and sampling sites. The dataset is first inspected and prepared by converting species names and disturbance categories into factors with defined ordering to ensure consistency with the original study. Two primary sets of plots are then created for phenylalanine (Phe) and lysine (Lys), showing how isotope values vary across species and disturbance levels. These plots include individual data points along with summary statistics (mean ± standard deviation), allowing for visualization of both variability and central tendencies within each group.
+
+A second set of visualizations examines the same amino acid values across sampling sites rather than disturbance categories. These plots incorporate additional aesthetics (color, fill, and shape) to distinguish among sites and include sample size annotations for each group. Consistent axis scaling and formatting are applied across all plots to facilitate comparison. Finally, all four panels (Phe and Lys by disturbance, and Phe and Lys by site) are combined into a single figure, replicating the structure of the original visualization and providing a comprehensive view of isotopic variation across ecological and spatial gradients.
 ```{r}
 #look at my data
 glimpse(csia_n)
@@ -422,7 +428,12 @@ knitr::include_graphics("images/Analysis2.png")
 csia_n_plots
 ```
 
-Analysis 3: Inferential Statistical Analysis Replication
+## Analysis 3: Inferential Statistical Analysis Replication
+This analysis reproduces the linear discriminant analysis (LDA) used to distinguish among carbon source groups based on essential amino acid isotope signatures. The dataset is first inspected and then subset into two components: a “source” dataset (excluding carnivorous fish groups) used to train the model, and an “animal” dataset containing the carnivorous fish whose source classification is inferred. This separation allows the model to be built exclusively on known source signatures before predicting classifications for consumer organisms.
+
+A linear discriminant analysis is then performed using six amino acids (isoleucine, leucine, lysine, phenylalanine, threonine, and valine) as predictor variables. The model is first run with cross-validation to evaluate classification performance, and a confusion matrix is used to calculate both overall accuracy and group-specific accuracy. A final LDA model is then trained on the full source dataset, and this trained model is used to predict the likely carbon source assignments for carnivorous fish samples.
+
+In addition to prediction, the model output is examined to identify which amino acids contribute most strongly to separation among groups, based on discriminant coefficients. While no direct plots are generated in this replication, the resulting LD1 and LD2 values and classification structure are consistent with those reported in the original study.
 ```{r}
 glimpse(csia_c)
 
@@ -452,16 +463,21 @@ fish.train
 
 #Comparison: no plots, however LD1 and LD2 values match what is reported in the paper
 ```
-Analysis 4: Data Visualization Original Plot
+
+## Analysis 4: Data Visualization Original Plot
 ```{r}
 #original figure 
 #| out-width: "##%"
 knitr::include_graphics("images/Analysis4.jpeg")
 ```
 
-Analysis 4: Data Visualization Plot Replication
-```{r}
+## Analysis 4: Data Visualization Plot Replication
+This analysis reconstructs and visualizes the linear discriminant analysis (LDA) results used to separate carbon sources and predict dietary contributions for carnivorous reef fishes based on essential amino acid isotope signatures. The process begins by extracting LDA coordinates for the source dataset and combining them with metadata such as fish code, species identity, and disturbance category. The trained LDA model is then applied to the carnivorous fish dataset to generate predicted group assignments, posterior probabilities, and discriminant scores, which are also formatted into a structured dataset for visualization.
 
+To enable comparison between groups, both source and consumer datasets are merged into a single dataframe containing LD1 and LD2 scores. The data are then reorganized to match the species ordering used in the original study, and LD2 values are flipped to ensure alignment with the published orientation of the ordination space. In addition, confidence ellipses are generated for each carbon source group based on covariance structure, providing a visual representation of group dispersion in discriminant space.
+
+The final visualization combines multiple components: carbon source ellipses outlining group separation, source points representing baseline isotope signatures, and fish points colored by species to show predicted dietary associations. This integrated LDA plot allows direct comparison of source clustering and consumer positioning within isotopic space. Overall, the replicated figure closely mirrors the original LDA visualization, capturing similar patterns of separation among carbon sources and consistent placement of consumer species within the graph.
+```{r}
 #Create data sets with these LDA coordinates
 datPred <- data.frame(fish_code = fish.source$fish_code, group=fish.source$group, sci_name = fish.source$sci_name, dist_cat = fish.source$dist_cat, predict(fish.train)$x) 
 
@@ -537,6 +553,13 @@ lda_plot
 knitr::include_graphics("images/Analysis4.jpeg")
 lda_plot 
 ```
+
+## Disscussion & Reflection
+Overall, the replication of analyses from Ramirez et al. was largely successful. The majority of summary statistics, visualizations, and inferential results closely matched those presented in the original paper, indicating that the main patterns and conclusions are reproducible using the provided data. In particular, comparisons of relative biomass and abundance across disturbance levels, as well as visualizations of essential amino acid values, were consistent with the published results. The linear discriminant analysis (LDA) and its associated plots also showed similar separation among carbon sources, suggesting that the key structure of the data was effectively reproduced.
+
+While the replication was largely successful, there were some challenges encountered throughout the process. At times, it was not entirely clear how certain variables were processed or how specific figures were generated in the original study. This made it difficult to determine whether discrepancies were due to coding differences or underlying data handling steps that were not explicitly described. In a few cases, brief reference to the original code helped clarify these issues, but the majority of the replication was completed independently. These challenges highlight the importance of clear methodological descriptions and detailed reporting of data processing steps in published studies.
+
+Some minor differences between the replicated results and the original outputs likely stem from differences in coding approaches and implementation. My analyses relied heavily on packages such as dplyr for data manipulation and summarization, whereas the original study primarily used base R functions. Although both approaches are valid, small differences in grouping behavior, ordering of factors, or handling of missing values can lead to slight variations in results or figure appearance. Despite these minor inconsistencies, the overall agreement between the replicated and original analyses suggests that the results are robust and that the study’s conclusions are well supported.
 
 ## References:
 Ramirez MD, McMahon KW, Rooney N, El-Sabaawi RW, Baum JK. 2026. Carbon pathways and trophic attributes are conserved in carnivorous reef fishes across a major human disturbance gradient. Journal of Animal Ecology 95: 39–53. 

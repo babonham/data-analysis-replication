@@ -2248,7 +2248,9 @@ Attaching package: 'dplyr'</code></pre>
 </table>
 </div>
 </div>
-<p>Analysis 1: Summary Statistic Original Plot</p>
+</section>
+<section id="analysis-1-summary-statistic-original-plot" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-1-summary-statistic-original-plot">Analysis 1: Summary Statistic Original Plot</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#original figure </span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "##%"</span></span>
@@ -2261,7 +2263,11 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 </div>
-<p>Analysis 1: Summary Statistic Replication</p>
+</section>
+<section id="analysis-1-summary-statistic-replication" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-1-summary-statistic-replication">Analysis 1: Summary Statistic Replication</h2>
+<p>This analysis summarizes and visualizes how fish community structure varies across levels of human disturbance by examining both abundance and biomass across trophic groups. The workflow begins by grouping the dataset by disturbance category and calculating mean total abundance and biomass, along with mean values for each trophic group. These values are then reshaped into long format to facilitate plotting, and converted into relative percentages of the total (i.e., percent contribution of each trophic group to overall abundance or biomass). Factor levels for both disturbance categories and trophic groups are explicitly ordered to match the original study’s presentation.</p>
+<p>The processed data are visualized using bar plots that display the percent contribution of each trophic group across disturbance levels, with separate panels (facets) for each category. This approach is applied consistently to both abundance and biomass, allowing for direct comparison between the two metrics. Finally, the abundance and biomass plots are combined into a single figure, replicating the structure of the original analysis and enabling an integrated view of how trophic composition appears across the disturbance gradient.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#look at my variables</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(fish_data) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2431,7 +2437,9 @@ $ AB_plank &lt;int&gt; 2466, 1020, 2418, 865, 3618, 1606, 1858, 1178, 2456, 986,
 </div>
 </div>
 </div>
-<p>Analysis 2: Data Visualization Original Plot</p>
+</section>
+<section id="analysis-2-data-visualization-original-plot" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-2-data-visualization-original-plot">Analysis 2: Data Visualization Original Plot</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#original figure </span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "##%"</span></span>
@@ -2444,7 +2452,11 @@ $ AB_plank &lt;int&gt; 2466, 1020, 2418, 865, 3618, 1606, 1858, 1178, 2456, 986,
 </div>
 </div>
 </div>
-<p>Analysis 2: Data Visualization Replication</p>
+</section>
+<section id="analysis-2-data-visualization-replication" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-2-data-visualization-replication">Analysis 2: Data Visualization Replication</h2>
+<p>This analysis focuses on visualizing variation in essential amino acid isotope values (δ¹⁵N) across fish species, disturbance levels, and sampling sites. The dataset is first inspected and prepared by converting species names and disturbance categories into factors with defined ordering to ensure consistency with the original study. Two primary sets of plots are then created for phenylalanine (Phe) and lysine (Lys), showing how isotope values vary across species and disturbance levels. These plots include individual data points along with summary statistics (mean ± standard deviation), allowing for visualization of both variability and central tendencies within each group.</p>
+<p>A second set of visualizations examines the same amino acid values across sampling sites rather than disturbance categories. These plots incorporate additional aesthetics (color, fill, and shape) to distinguish among sites and include sample size annotations for each group. Consistent axis scaling and formatting are applied across all plots to facilitate comparison. Finally, all four panels (Phe and Lys by disturbance, and Phe and Lys by site) are combined into a single figure, replicating the structure of the original visualization and providing a comprehensive view of isotopic variation across ecological and spatial gradients.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#look at my data</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(csia_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2807,7 +2819,12 @@ $ Sr_avg                 &lt;dbl&gt; 4.196229, 3.769378, 5.873063, 3.280618, 5.9
 </div>
 </div>
 </div>
-<p>Analysis 3: Inferential Statistical Analysis Replication</p>
+</section>
+<section id="analysis-3-inferential-statistical-analysis-replication" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-3-inferential-statistical-analysis-replication">Analysis 3: Inferential Statistical Analysis Replication</h2>
+<p>This analysis reproduces the linear discriminant analysis (LDA) used to distinguish among carbon source groups based on essential amino acid isotope signatures. The dataset is first inspected and then subset into two components: a “source” dataset (excluding carnivorous fish groups) used to train the model, and an “animal” dataset containing the carnivorous fish whose source classification is inferred. This separation allows the model to be built exclusively on known source signatures before predicting classifications for consumer organisms.</p>
+<p>A linear discriminant analysis is then performed using six amino acids (isoleucine, leucine, lysine, phenylalanine, threonine, and valine) as predictor variables. The model is first run with cross-validation to evaluate classification performance, and a confusion matrix is used to calculate both overall accuracy and group-specific accuracy. A final LDA model is then trained on the full source dataset, and this trained model is used to predict the likely carbon source assignments for carnivorous fish samples.</p>
+<p>In addition to prediction, the model output is examined to identify which amino acids contribute most strongly to separation among groups, based on discriminant coefficients. While no direct plots are generated in this replication, the resulting LD1 and LD2 values and classification structure are consistent with those reported in the original study.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(csia_c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2905,7 +2922,9 @@ Proportion of trace:
 </div>
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Comparison: no plots, however LD1 and LD2 values match what is reported in the paper</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Analysis 4: Data Visualization Original Plot</p>
+</section>
+<section id="analysis-4-data-visualization-original-plot" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-4-data-visualization-original-plot">Analysis 4: Data Visualization Original Plot</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#original figure </span></span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "##%"</span></span>
@@ -2918,7 +2937,12 @@ Proportion of trace:
 </div>
 </div>
 </div>
-<p>Analysis 4: Data Visualization Plot Replication</p>
+</section>
+<section id="analysis-4-data-visualization-plot-replication" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-4-data-visualization-plot-replication">Analysis 4: Data Visualization Plot Replication</h2>
+<p>This analysis reconstructs and visualizes the linear discriminant analysis (LDA) results used to separate carbon sources and predict dietary contributions for carnivorous reef fishes based on essential amino acid isotope signatures. The process begins by extracting LDA coordinates for the source dataset and combining them with metadata such as fish code, species identity, and disturbance category. The trained LDA model is then applied to the carnivorous fish dataset to generate predicted group assignments, posterior probabilities, and discriminant scores, which are also formatted into a structured dataset for visualization.</p>
+<p>To enable comparison between groups, both source and consumer datasets are merged into a single dataframe containing LD1 and LD2 scores. The data are then reorganized to match the species ordering used in the original study, and LD2 values are flipped to ensure alignment with the published orientation of the ordination space. In addition, confidence ellipses are generated for each carbon source group based on covariance structure, providing a visual representation of group dispersion in discriminant space.</p>
+<p>The final visualization combines multiple components: carbon source ellipses outlining group separation, source points representing baseline isotope signatures, and fish points colored by species to show predicted dietary associations. This integrated LDA plot allows direct comparison of source clustering and consumer positioning within isotopic space. Overall, the replicated figure closely mirrors the original LDA visualization, capturing similar patterns of separation among carbon sources and consistent placement of consumer species within the graph.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Create data sets with these LDA coordinates</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>datPred <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">fish_code =</span> fish.source<span class="sc">$</span>fish_code, <span class="at">group=</span>fish.source<span class="sc">$</span>group, <span class="at">sci_name =</span> fish.source<span class="sc">$</span>sci_name, <span class="at">dist_cat =</span> fish.source<span class="sc">$</span>dist_cat, <span class="fu">predict</span>(fish.train)<span class="sc">$</span>x) </span>
@@ -3019,6 +3043,12 @@ Proportion of trace:
 </div>
 </div>
 </div>
+</section>
+<section id="disscussion-reflection" class="level2">
+<h2 class="anchored" data-anchor-id="disscussion-reflection">Disscussion &amp; Reflection</h2>
+<p>Overall, the replication of analyses from Ramirez et al.&nbsp;was largely successful. The majority of summary statistics, visualizations, and inferential results closely matched those presented in the original paper, indicating that the main patterns and conclusions are reproducible using the provided data. In particular, comparisons of relative biomass and abundance across disturbance levels, as well as visualizations of essential amino acid values, were consistent with the published results. The linear discriminant analysis (LDA) and its associated plots also showed similar separation among carbon sources, suggesting that the key structure of the data was effectively reproduced.</p>
+<p>While the replication was largely successful, there were some challenges encountered throughout the process. At times, it was not entirely clear how certain variables were processed or how specific figures were generated in the original study. This made it difficult to determine whether discrepancies were due to coding differences or underlying data handling steps that were not explicitly described. In a few cases, brief reference to the original code helped clarify these issues, but the majority of the replication was completed independently. These challenges highlight the importance of clear methodological descriptions and detailed reporting of data processing steps in published studies.</p>
+<p>Some minor differences between the replicated results and the original outputs likely stem from differences in coding approaches and implementation. My analyses relied heavily on packages such as dplyr for data manipulation and summarization, whereas the original study primarily used base R functions. Although both approaches are valid, small differences in grouping behavior, ordering of factors, or handling of missing values can lead to slight variations in results or figure appearance. Despite these minor inconsistencies, the overall agreement between the replicated and original analyses suggests that the results are robust and that the study’s conclusions are well supported.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References:</h2>
